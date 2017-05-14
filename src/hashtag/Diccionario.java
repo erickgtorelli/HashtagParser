@@ -38,12 +38,23 @@ public class Diccionario {
      public Nodo getHermanoDerecho(){
          return this.HermanoDerecho;
      }
-     public char getCaracter
+     public char getCaracter(){
+         return this.Caracter;
+     }
+     public void imprimirNodo(){
+         System.out.println("Nodo: ");
+         System.out.println("Caracter: " + this.Caracter);
+         System.out.println("Peso: " + this.Probabilidad);
+     }
      
     }
     
    Nodo Padre;
    String Archivo_de_palabras;
+   
+   public Diccionario(){
+       Padre = new Nodo('~',0);
+   }
    /*
    * Carga el archivo de palabras y las va insertando en el diccionario
    */
@@ -57,28 +68,74 @@ public class Diccionario {
                   while ((linea = reader.readLine()) != null)
                   {
                       //Aún no se toma en cuenta el peso de cada palabra
-                      insertarPalabra(linea);
+                      //Por ahora peso booleano
+                      insertarPalabra(linea,1);
                   }
-
                 }
                 catch (Exception e)
                 {
                   System.err.format("Exception occurred trying to read '%s'.", Archivo_de_palabras);
                 }   
    } 
-   public void insertarPalabra(String palabra){
+   private void insertarPalabra(String palabra,float peso){
        char[] caracteres = palabra.toCharArray();
        Nodo insertando;
        Nodo nodo_actual = Padre;
        boolean insertado = false; 
        for(int i = 0;i<caracteres.length;i++){
-           insertando = new Nodo(caracteres[i],0);
            while(!insertado){
-               if(nodo_actual.)
+               if(nodo_actual.getCaracter() != caracteres[i]){
+                   if(nodo_actual.getHermanoDerecho() != null){
+                       nodo_actual = nodo_actual.getHermanoDerecho();
+                   }
+                   //insertando en el nivel actual
+                   else{
+                       //Si NO es el final de la palabra
+                       if(i < caracteres.length -1){
+                        // Peso negativo porque no es una palabra
+                       insertando = new Nodo(caracteres[i],-1);
+                       Nodo nuevo_nivel = new Nodo('~',0);
+                       nodo_actual.setHermanoDerecho(insertando);
+                       nodo_actual.getHermanoDerecho().setHijo(nuevo_nivel);
+                       nodo_actual = nodo_actual.getHermanoDerecho().getHijo();
+                       }
+                       else{
+                       insertando = new Nodo(caracteres[i],peso);   
+                       nodo_actual.setHermanoDerecho(insertando);
+                       }
+                       insertado = true;
+                   }
+               }
+               else{
+                   if(nodo_actual.getHijo() != null){
+                       nodo_actual = nodo_actual.getHijo();
+                   }
+                   else{
+                       Nodo nuevo_nivel = new Nodo('~',0);
+                       nodo_actual.setHijo(nuevo_nivel);
+                       nodo_actual = nodo_actual.getHijo();
+                   }
+                   insertado = true;
+                   
+               }
            }
        }
    }
-   public void buscarPalabra(String palabra){
-       
+   public int buscarPalabra(String palabra){
+       return 0;
+   }
+   
+   public void imprimirDiccionario(){
+       imprimirDiccionarioR(Padre,0);
+   }
+   private void imprimirDiccionarioR(Nodo actual,int nivel){
+       System.out.println("Nivel: " + nivel);
+       actual.imprimirNodo();
+       if(actual.getHijo()!= null){
+           imprimirDiccionarioR(actual.getHijo(), nivel + 1);
+       }
+       if(actual.getHijo() != null){
+           imprimirDiccionarioR(actual.getHermanoDerecho(),nivel);
+       }
    }
 }
