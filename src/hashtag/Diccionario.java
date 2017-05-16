@@ -52,8 +52,10 @@ public class Diccionario {
    Nodo Padre;
    String Archivo_de_palabras;
    
-   public Diccionario(){
+   public Diccionario(String Archivo){
        Padre = new Nodo('~',0);
+       Archivo_de_palabras = Archivo;
+       cargarPalabras();
    }
    /*
    * Carga el archivo de palabras y las va insertando en el diccionario
@@ -81,8 +83,9 @@ public class Diccionario {
        char[] caracteres = palabra.toCharArray();
        Nodo insertando;
        Nodo nodo_actual = Padre;
-       boolean insertado = false; 
+       boolean insertado; 
        for(int i = 0;i<caracteres.length;i++){
+           insertado = false;
            while(!insertado){
                if(nodo_actual.getCaracter() != caracteres[i]){
                    if(nodo_actual.getHermanoDerecho() != null){
@@ -95,14 +98,14 @@ public class Diccionario {
                         // Peso negativo porque no es una palabra
                        insertando = new Nodo(caracteres[i],-1);
                        Nodo nuevo_nivel = new Nodo('~',0);
-                       nodo_actual.setHermanoDerecho(insertando);
-                       nodo_actual.getHermanoDerecho().setHijo(nuevo_nivel);
-                       nodo_actual = nodo_actual.getHermanoDerecho().getHijo();
                        }
                        else{
                        insertando = new Nodo(caracteres[i],peso);   
-                       nodo_actual.setHermanoDerecho(insertando);
                        }
+                       Nodo nuevo_nivel = new Nodo('~',0);
+                       nodo_actual.setHermanoDerecho(insertando);
+                       nodo_actual.getHermanoDerecho().setHijo(nuevo_nivel);
+                       nodo_actual = nodo_actual.getHermanoDerecho().getHijo();
                        insertado = true;
                    }
                }
@@ -129,12 +132,15 @@ public class Diccionario {
        imprimirDiccionarioR(Padre,0);
    }
    private void imprimirDiccionarioR(Nodo actual,int nivel){
-       System.out.println("Nivel: " + nivel);
-       actual.imprimirNodo();
+       
+       if(!(actual.getCaracter() == '~')){
+           System.out.println("Nivel: " + nivel);
+           actual.imprimirNodo();
+        }
        if(actual.getHijo()!= null){
            imprimirDiccionarioR(actual.getHijo(), nivel + 1);
        }
-       if(actual.getHijo() != null){
+       if(actual.getHermanoDerecho() != null){
            imprimirDiccionarioR(actual.getHermanoDerecho(),nivel);
        }
    }
