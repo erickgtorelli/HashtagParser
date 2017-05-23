@@ -15,7 +15,9 @@ public class HashtagParserFSA {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+       Diccionario dic = new Diccionario();
+       dic.cargarPalabras("palabras.txt");
+       dic.Automata.imprimirFSA();
     }
     
 }

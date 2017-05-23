@@ -4,6 +4,7 @@
 package hashtagparserfsa;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -14,6 +15,7 @@ public class FSA {
         char Elemento;
         ArrayList<Estado> transiciones;
         boolean Aceptacion = false;
+       
        /**
         * Constructor
         * @param elemento
@@ -24,7 +26,18 @@ public class FSA {
           this.Aceptacion = aceptacion; 
           this.Elemento = elemento;
        }
-       
+       public char getElemento(){
+           return Elemento;
+       }
+       public void setElemento(char elemento){
+           this.Elemento = elemento;
+       }
+       public ArrayList<Estado> getTransiciones(){
+           return this.transiciones;
+       }
+       public void setAceptacion(boolean estado){
+           this.Aceptacion = estado;
+       }
         /**
          * Inserta una nueva transición con el estado "nuevo"
          * @param nuevo
@@ -44,8 +57,59 @@ public class FSA {
         }
     }
     Estado Inicial;
-    
+    public FSA(){
+        Inicial = new Estado('#',false);
+    }
     public boolean insertarPalabra(String palabra){
+       char[] caracteres = palabra.toCharArray();
+       Estado estado_actual = Inicial;
+       Estado insertando;
+       ArrayList<Estado> transiciones;
+       boolean insertado;
+       boolean encontrado;
+       for(int i = 0;i<caracteres.length;i++){
+           insertado = false;
+           encontrado = false;
+           transiciones = estado_actual.getTransiciones();
+           while(!insertado && !encontrado){
+               for( Estado actual : transiciones){
+                   //el elemento ya está en la lista, se comprueba si es necesario cambiar el estado de aceptacion 
+                  if(actual.getElemento() == caracteres[i]){
+                      if(i >= caracteres.length){
+                          actual.setAceptacion(true);
+                      }
+                      estado_actual = actual;
+                      encontrado = true;
+                  }
+               }
+                  //se terminaron las posibles trancisiones y no encontro el elemento, entonces se inserta
+                  if (!encontrado) {
+                      if(i < caracteres.length -1){
+                          insertando = new Estado(caracteres[i],false);
+                      }
+                      else{
+                          insertando = new Estado(caracteres[i],true);  
+                      }
+                      estado_actual.crearTransicion(insertando);
+                      estado_actual = insertando;  
+                      insertado = true;
+                  }   
+            }
+       }
        return true; 
+    }
+    
+    public void imprimirFSA(){
+        imprimirFSAR(Inicial,0);
+    }
+    private void imprimirFSAR(Estado estado,int nivel){       
+        ArrayList<Estado> trasiciones = estado.getTransiciones();
+        System.out.println("Nivel: " + nivel);
+        estado.imprimirEstado();
+        if(trasiciones.size() > 0){
+            for(Estado siguiente : trasiciones){
+                imprimirFSAR(siguiente, nivel + 1);
+            }
+        }
     }
 }
