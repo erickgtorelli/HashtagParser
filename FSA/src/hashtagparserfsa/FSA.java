@@ -12,9 +12,9 @@ import java.util.Iterator;
  */
 public class FSA {
     public class Estado{
-        char Elemento;
-        ArrayList<Estado> transiciones;
-        boolean Aceptacion = false;
+        private char Elemento;
+        private ArrayList<Estado> transiciones;
+        private boolean Aceptacion = false;
        
        /**
         * Constructor
@@ -37,6 +37,9 @@ public class FSA {
        }
        public void setAceptacion(boolean estado){
            this.Aceptacion = estado;
+       }
+       public boolean getAceptacion(){
+           return Aceptacion;
        }
         /**
          * Inserta una nueva transición con el estado "nuevo"
@@ -98,7 +101,38 @@ public class FSA {
        }
        return true; 
     }
-    
+    public boolean buscarPalabra(String palabra){
+        char[] caracteres = palabra.toCharArray();
+       Estado estado_actual = Inicial;
+       ArrayList<Estado> transiciones;
+       boolean encontrado;
+       boolean busquedaTerminada = false;
+       boolean resultado = false;
+       for(int i = 0;i<caracteres.length;i++){
+           encontrado = false; 
+           transiciones = estado_actual.getTransiciones();
+           while(!encontrado && !busquedaTerminada){
+               for( Estado actual : transiciones){
+                  //el caracter buscado está en lista de estados posibles
+                  if(actual.getElemento() == caracteres[i]){
+                      encontrado = true;
+                      if(actual.getAceptacion() && (i == caracteres.length - 1)){
+                          resultado = true;
+                      }
+                      else{
+                          estado_actual = actual;
+                      }
+                  }
+               }
+                  //se terminaron las posibles trancisiones y no encontro el elemento
+                  if(encontrado == false){
+                      busquedaTerminada = true;
+                  }
+                  
+            }
+       }
+       return resultado; 
+    }
     public void imprimirFSA(){
         imprimirFSAR(Inicial,0);
     }
