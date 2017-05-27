@@ -101,8 +101,7 @@ public class FSA {
        }
        return true; 
     }
-    public boolean buscarPalabra(String palabra){
-        char[] caracteres = palabra.toCharArray();
+    public boolean buscarPalabra(char [] caracteres){
        Estado estado_actual = Inicial;
        ArrayList<Estado> transiciones;
        boolean encontrado;

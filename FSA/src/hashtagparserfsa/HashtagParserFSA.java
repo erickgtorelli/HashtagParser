@@ -17,7 +17,7 @@ public class HashtagParserFSA {
     public static void main(String[] args) {
        Diccionario dic = new Diccionario();
        dic.cargarPalabras("palabras.txt");
-       dic.Automata.imprimirFSA();
+       dic.procesarHashtag("QueLindoSerMorado");
     }
     
 }
