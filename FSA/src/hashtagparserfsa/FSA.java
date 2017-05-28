@@ -78,7 +78,7 @@ public class FSA {
                for( Estado actual : transiciones){
                    //el elemento ya está en la lista, se comprueba si es necesario cambiar el estado de aceptacion 
                   if(actual.getElemento() == caracteres[i]){
-                      if(i >= caracteres.length){
+                      if(i >= caracteres.length - 1){
                           actual.setAceptacion(true);
                       }
                       estado_actual = actual;
@@ -87,7 +87,7 @@ public class FSA {
                }
                   //se terminaron las posibles trancisiones y no encontro el elemento, entonces se inserta
                   if (!encontrado) {
-                      if(i < caracteres.length -1){
+                      if(i < caracteres.length - 1){
                           insertando = new Estado(caracteres[i],false);
                       }
                       else{

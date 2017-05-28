@@ -16,8 +16,12 @@ public class HashtagParserFSA {
      */
     public static void main(String[] args) {
        Diccionario dic = new Diccionario();
-       dic.cargarPalabras("palabras.txt");
-       dic.procesarHashtag("QueLindoSerMorado");
+       dic.cargarPalabras("diccionario.txt");
+       dic.Automata.buscarPalabra("noticia".toCharArray());
+       System.out.println(dic.Automata.buscarPalabra("morado".toCharArray()));
+       dic.procesarHashtag("buenasnoticias");
+       dic.procesarHashtag("vamoscontodo");
+       
     }
     
 }

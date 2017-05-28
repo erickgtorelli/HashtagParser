@@ -34,6 +34,7 @@ public void cargarPalabras(String Archivo_de_palabras){
                   while ((linea = reader.readLine()) != null)
                   {
                       Automata.insertarPalabra(linea);
+                     
                   }
                 }
                 catch (Exception e)
@@ -64,9 +65,9 @@ public void cargarPalabras(String Archivo_de_palabras){
              palabraEncontrada = Automata.buscarPalabra(evaluando);
              if(palabraEncontrada){
                alMenosUnaPalabra = true;
-               palabra = new Tupla <char[], Integer>(evaluando,1);
+               palabra = new Tupla <char[], Integer>(evaluando,evaluando.length*evaluando.length);
                listaNueva = nuevaLista(PalabrasEncontradas,palabra);
-               if(j < Resto.length - 1){
+               if(j < Resto.length){
                 procesarHashtagR(listaNueva, cortarListaCharI(Resto, j, Resto.length));
                }
                else{
@@ -93,17 +94,29 @@ public void cargarPalabras(String Archivo_de_palabras){
  private String evaluarPosibilidades(){
      ArrayList<Tupla<char[], Integer>> max = null;
      Integer maxPeso = -10000;
+     int contadorErrores = 0;
      for(ArrayList<Tupla<char[], Integer>> subLista : Posibilidades){
          Integer contador = 0;
+         contadorErrores = 0;
          for(Tupla<char[],Integer> tupla : subLista){
-             contador += tupla.t; 
+             if(tupla.t == -1){
+                contadorErrores += 1;
+             }
+             else{
+               contador += tupla.t;   
+             }
+             
          }
-         if(contador > maxPeso){
+         if(contadorErrores > 0){
+            contador = contador / 2  * contadorErrores;
+         }
+         if(contador >= maxPeso){
              maxPeso = contador;
              max = subLista;
          }
+         imprimirSubLista(max, maxPeso);
      }
-     imprimirSubLista(max,maxPeso);
+     
      return "test";
  }
  public void imprimirSubLista(ArrayList<Tupla<char[],Integer>> sublista,int peso){
